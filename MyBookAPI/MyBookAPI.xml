@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MyBookAPI</name>
+    </assembly>
+    <members>
+        <member name="M:MyBookAPI.Controllers.HealthChecksController.GetAsync">
+            <summary>
+            Method that checks if the API is healthy or not.
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
