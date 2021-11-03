@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using MyBookAPI.Domain.Common;
+using System.Collections.Generic;
 
 namespace MyBookAPI.Domain.Entities
 {
-    public class Book
+    public class Book : AuditableEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }
