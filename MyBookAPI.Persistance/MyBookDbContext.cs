@@ -2,6 +2,7 @@
 using MyBookAPI.Domain.Common;
 using MyBookAPI.Domain.Entities;
 using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,13 +20,12 @@ namespace MyBookAPI.Persistance
         public DbSet<PublishingHouse> PublishingHouses { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Author>().OwnsOne(p => p.AuthorName);
-            modelBuilder.Entity<User>().OwnsOne(p => p.UserName);
-            modelBuilder.Entity<User>().OwnsOne(p => p.Address);
-            modelBuilder.Entity<PublishingHouse>().OwnsOne(p => p.Address);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.SeedData();
         }
         
         public override Task<int> SaveChangesAsync(CancellationToken cancellatonToken = new CancellationToken())

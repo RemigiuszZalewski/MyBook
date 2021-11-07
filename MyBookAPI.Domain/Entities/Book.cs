@@ -10,7 +10,8 @@ namespace MyBookAPI.Domain.Entities
         public decimal Price { get; set; }
         public bool ToBeSold { get; set; }
         public int Pages { get; set; }
-        public string Category { get; set; }
+        public int? CategoryId { get; set; }
+        public Category Category { get; set; }
         public int ReleaseYear { get; set; }
         public int? PublishingHouseId { get; set; }
         public PublishingHouse PublishingHouse { get; set; }
