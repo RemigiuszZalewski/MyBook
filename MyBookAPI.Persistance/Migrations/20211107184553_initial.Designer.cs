@@ -10,7 +10,7 @@ using MyBookAPI.Persistance;
 namespace MyBookAPI.Persistance.Migrations
 {
     [DbContext(typeof(MyBookDbContext))]
-    [Migration("20211103191257_initial")]
+    [Migration("20211107184553_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,6 +52,14 @@ namespace MyBookAPI.Persistance.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Authors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Created = new DateTime(2021, 11, 7, 19, 45, 51, 598, DateTimeKind.Local).AddTicks(2968),
+                            StatusId = 1
+                        });
                 });
 
             modelBuilder.Entity("MyBookAPI.Domain.Entities.Book", b =>
@@ -64,8 +72,8 @@ namespace MyBookAPI.Persistance.Migrations
                     b.Property<int?>("AuthorId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -86,33 +94,176 @@ namespace MyBookAPI.Persistance.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Pages")
+                        .HasMaxLength(2000)
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(2, 2)
+                        .HasColumnType("decimal(2,2)");
 
                     b.Property<int?>("PublishingHouseId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReleaseYear")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(2000);
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.Property<bool>("ToBeSold")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("PublishingHouseId");
 
                     b.ToTable("Books");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AuthorId = 1,
+                            CategoryId = 5,
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Pan Tadeusz",
+                            Pages = 0,
+                            Price = 0m,
+                            PublishingHouseId = 1,
+                            ReleaseYear = 0,
+                            StatusId = 0,
+                            ToBeSold = false
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AuthorId = 1,
+                            CategoryId = 8,
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Dziady II",
+                            Pages = 0,
+                            Price = 0m,
+                            PublishingHouseId = 1,
+                            ReleaseYear = 0,
+                            StatusId = 0,
+                            ToBeSold = false
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AuthorId = 1,
+                            CategoryId = 8,
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Konrad Wallenrod",
+                            Pages = 0,
+                            Price = 0m,
+                            PublishingHouseId = 1,
+                            ReleaseYear = 0,
+                            StatusId = 0,
+                            ToBeSold = false
+                        });
+                });
+
+            modelBuilder.Entity("MyBookAPI.Domain.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Fantasy and Science Fiction"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Horror"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Thriller"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "History"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Poetry"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Crime"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Travel"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Drama"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Biography"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Science"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Cookbook"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Health and Diet"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Classic"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "Romance"
+                        });
                 });
 
             modelBuilder.Entity("MyBookAPI.Domain.Entities.PublishingHouse", b =>
@@ -141,7 +292,9 @@ namespace MyBookAPI.Persistance.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
@@ -149,6 +302,15 @@ namespace MyBookAPI.Persistance.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PublishingHouses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Created = new DateTime(2021, 11, 7, 19, 45, 51, 614, DateTimeKind.Local).AddTicks(2909),
+                            Name = "BestPublishingHouse",
+                            StatusId = 1
+                        });
                 });
 
             modelBuilder.Entity("MyBookAPI.Domain.Entities.Review", b =>
@@ -162,10 +324,13 @@ namespace MyBookAPI.Persistance.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Stars")
+                        .HasMaxLength(5)
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
@@ -206,10 +371,16 @@ namespace MyBookAPI.Persistance.Migrations
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                             b1.Property<string>("FirstName")
-                                .HasColumnType("nvarchar(max)");
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("nvarchar(20)")
+                                .HasColumnName("FirstName");
 
                             b1.Property<string>("LastName")
-                                .HasColumnType("nvarchar(max)");
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("nvarchar(20)")
+                                .HasColumnName("LastName");
 
                             b1.HasKey("AuthorId");
 
@@ -217,6 +388,14 @@ namespace MyBookAPI.Persistance.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("AuthorId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    AuthorId = 1,
+                                    FirstName = "Adam",
+                                    LastName = "Mickiewicz"
+                                });
                         });
 
                     b.Navigation("AuthorName");
@@ -228,11 +407,17 @@ namespace MyBookAPI.Persistance.Migrations
                         .WithMany("Books")
                         .HasForeignKey("AuthorId");
 
+                    b.HasOne("MyBookAPI.Domain.Entities.Category", "Category")
+                        .WithMany("Books")
+                        .HasForeignKey("CategoryId");
+
                     b.HasOne("MyBookAPI.Domain.Entities.PublishingHouse", "PublishingHouse")
                         .WithMany("Books")
                         .HasForeignKey("PublishingHouseId");
 
                     b.Navigation("Author");
+
+                    b.Navigation("Category");
 
                     b.Navigation("PublishingHouse");
                 });
@@ -247,16 +432,28 @@ namespace MyBookAPI.Persistance.Migrations
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                             b1.Property<string>("City")
-                                .HasColumnType("nvarchar(max)");
+                                .IsRequired()
+                                .HasMaxLength(25)
+                                .HasColumnType("nvarchar(25)")
+                                .HasColumnName("City");
 
                             b1.Property<string>("Country")
-                                .HasColumnType("nvarchar(max)");
+                                .IsRequired()
+                                .HasMaxLength(25)
+                                .HasColumnType("nvarchar(25)")
+                                .HasColumnName("Country");
 
                             b1.Property<string>("Street")
-                                .HasColumnType("nvarchar(max)");
+                                .IsRequired()
+                                .HasMaxLength(30)
+                                .HasColumnType("nvarchar(30)")
+                                .HasColumnName("Street");
 
                             b1.Property<string>("ZipCode")
-                                .HasColumnType("nvarchar(max)");
+                                .IsRequired()
+                                .HasMaxLength(6)
+                                .HasColumnType("nvarchar(6)")
+                                .HasColumnName("ZipCode");
 
                             b1.HasKey("PublishingHouseId");
 
@@ -264,6 +461,16 @@ namespace MyBookAPI.Persistance.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("PublishingHouseId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    PublishingHouseId = 1,
+                                    City = "Warsaw",
+                                    Country = "Poland",
+                                    Street = "Kolorowa 3/2",
+                                    ZipCode = "00-014"
+                                });
                         });
 
                     b.Navigation("Address");
@@ -294,16 +501,28 @@ namespace MyBookAPI.Persistance.Migrations
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                             b1.Property<string>("City")
-                                .HasColumnType("nvarchar(max)");
+                                .IsRequired()
+                                .HasMaxLength(25)
+                                .HasColumnType("nvarchar(25)")
+                                .HasColumnName("City");
 
                             b1.Property<string>("Country")
-                                .HasColumnType("nvarchar(max)");
+                                .IsRequired()
+                                .HasMaxLength(25)
+                                .HasColumnType("nvarchar(25)")
+                                .HasColumnName("Country");
 
                             b1.Property<string>("Street")
-                                .HasColumnType("nvarchar(max)");
+                                .IsRequired()
+                                .HasMaxLength(30)
+                                .HasColumnType("nvarchar(30)")
+                                .HasColumnName("Street");
 
                             b1.Property<string>("ZipCode")
-                                .HasColumnType("nvarchar(max)");
+                                .IsRequired()
+                                .HasMaxLength(6)
+                                .HasColumnType("nvarchar(6)")
+                                .HasColumnName("ZipCode");
 
                             b1.HasKey("UserId");
 
@@ -321,10 +540,16 @@ namespace MyBookAPI.Persistance.Migrations
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                             b1.Property<string>("FirstName")
-                                .HasColumnType("nvarchar(max)");
+                                .IsRequired()
+                                .HasMaxLength(25)
+                                .HasColumnType("nvarchar(25)")
+                                .HasColumnName("FirstName");
 
                             b1.Property<string>("LastName")
-                                .HasColumnType("nvarchar(max)");
+                                .IsRequired()
+                                .HasMaxLength(25)
+                                .HasColumnType("nvarchar(25)")
+                                .HasColumnName("LastName");
 
                             b1.HasKey("UserId");
 
@@ -347,6 +572,11 @@ namespace MyBookAPI.Persistance.Migrations
             modelBuilder.Entity("MyBookAPI.Domain.Entities.Book", b =>
                 {
                     b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("MyBookAPI.Domain.Entities.Category", b =>
+                {
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("MyBookAPI.Domain.Entities.PublishingHouse", b =>
