@@ -9,5 +9,6 @@ namespace MyBookAPI.Domain.Entities
         public string Name { get; set; }
         public Address Address { get; set; }
         public ICollection<Book> Books { get; set; }
+        public Description Description { get; set; }
     }
 }

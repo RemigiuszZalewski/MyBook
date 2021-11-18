@@ -15,6 +15,7 @@ namespace MyBookAPI.Persistance.Configurations
             builder.OwnsOne(p => p.Address).Property(p => p.City).HasMaxLength(25).HasColumnName("City").IsRequired();
             builder.OwnsOne(p => p.Address).Property(p => p.Street).HasMaxLength(30).HasColumnName("Street").IsRequired();
             builder.OwnsOne(p => p.Address).Property(p => p.ZipCode).HasMaxLength(6).HasColumnName("ZipCode").IsRequired();
+            builder.OwnsOne(p => p.Description).Property(p => p.Text).HasMaxLength(2000).HasColumnName("Description");
             builder.Property(p => p.DateOfBirth).IsRequired();
         }
     }

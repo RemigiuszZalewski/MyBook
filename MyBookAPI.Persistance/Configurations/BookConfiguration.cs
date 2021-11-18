@@ -12,8 +12,7 @@ namespace MyBookAPI.Persistance.Configurations
             builder.Property(p => p.Name).HasMaxLength(100).IsRequired();
             builder.Property(p => p.Pages).HasMaxLength(2000);
             builder.Property(p => p.Price).HasPrecision(2,2);
-            builder.Property(p => p.ReleaseYear).HasDefaultValue(2000);
-            builder.Property(p => p.ToBeSold).HasDefaultValue(true);
+            builder.OwnsOne(p => p.Description).Property(p => p.Text).HasMaxLength(2000).HasColumnName("Description");
         }
     }
 }
