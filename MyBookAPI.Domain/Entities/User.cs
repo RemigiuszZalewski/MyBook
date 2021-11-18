@@ -10,5 +10,6 @@ namespace MyBookAPI.Domain.Entities
         public DateTime DateOfBirth { get; set; }
         public Address Address { get; set; }
         public Review Review { get; set; }
+        public Description Description { get; set; }
     }
 }

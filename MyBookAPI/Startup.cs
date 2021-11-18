@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MyBookAPI.Persistance;
+using MyBookAPI.Infrastructure;
 using System;
 using System.IO;
 
@@ -23,6 +24,7 @@ namespace MyBookAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddPersistance(Configuration);
+            services.AddInfrastructure(Configuration);
 
             services.AddCors(options =>
             {

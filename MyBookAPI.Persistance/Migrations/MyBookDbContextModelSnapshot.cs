@@ -26,6 +26,9 @@ namespace MyBookAPI.Persistance.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
@@ -55,7 +58,7 @@ namespace MyBookAPI.Persistance.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2021, 11, 7, 19, 45, 51, 598, DateTimeKind.Local).AddTicks(2968),
+                            Created = new DateTime(2021, 11, 18, 14, 39, 48, 333, DateTimeKind.Local).AddTicks(5111),
                             StatusId = 1
                         });
                 });
@@ -100,25 +103,21 @@ namespace MyBookAPI.Persistance.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal?>("Price")
                         .HasPrecision(2, 2)
                         .HasColumnType("decimal(2,2)");
 
+                    b.Property<DateTime?>("PublicationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("PublishingHouseId")
                         .HasColumnType("int");
-
-                    b.Property<int>("ReleaseYear")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(2000);
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.Property<bool>("ToBeSold")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -139,9 +138,7 @@ namespace MyBookAPI.Persistance.Migrations
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Pan Tadeusz",
                             Pages = 0,
-                            Price = 0m,
                             PublishingHouseId = 1,
-                            ReleaseYear = 0,
                             StatusId = 0,
                             ToBeSold = false
                         },
@@ -153,9 +150,7 @@ namespace MyBookAPI.Persistance.Migrations
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Dziady II",
                             Pages = 0,
-                            Price = 0m,
                             PublishingHouseId = 1,
-                            ReleaseYear = 0,
                             StatusId = 0,
                             ToBeSold = false
                         },
@@ -167,9 +162,7 @@ namespace MyBookAPI.Persistance.Migrations
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Konrad Wallenrod",
                             Pages = 0,
-                            Price = 0m,
                             PublishingHouseId = 1,
-                            ReleaseYear = 0,
                             StatusId = 0,
                             ToBeSold = false
                         });
@@ -305,7 +298,7 @@ namespace MyBookAPI.Persistance.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2021, 11, 7, 19, 45, 51, 614, DateTimeKind.Local).AddTicks(2909),
+                            Created = new DateTime(2021, 11, 18, 14, 39, 48, 353, DateTimeKind.Local).AddTicks(4694),
                             Name = "BestPublishingHouse",
                             StatusId = 1
                         });
@@ -361,6 +354,26 @@ namespace MyBookAPI.Persistance.Migrations
 
             modelBuilder.Entity("MyBookAPI.Domain.Entities.Author", b =>
                 {
+                    b.OwnsOne("MyBookAPI.Domain.Entities.Description", "Description", b1 =>
+                        {
+                            b1.Property<int>("AuthorId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("Text")
+                                .HasMaxLength(2000)
+                                .HasColumnType("nvarchar(2000)")
+                                .HasColumnName("Description");
+
+                            b1.HasKey("AuthorId");
+
+                            b1.ToTable("Authors");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AuthorId");
+                        });
+
                     b.OwnsOne("MyBookAPI.Domain.Entities.PersonName", "AuthorName", b1 =>
                         {
                             b1.Property<int>("AuthorId")
@@ -397,6 +410,8 @@ namespace MyBookAPI.Persistance.Migrations
                         });
 
                     b.Navigation("AuthorName");
+
+                    b.Navigation("Description");
                 });
 
             modelBuilder.Entity("MyBookAPI.Domain.Entities.Book", b =>
@@ -413,9 +428,31 @@ namespace MyBookAPI.Persistance.Migrations
                         .WithMany("Books")
                         .HasForeignKey("PublishingHouseId");
 
+                    b.OwnsOne("MyBookAPI.Domain.Entities.Description", "Description", b1 =>
+                        {
+                            b1.Property<int>("BookId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("Text")
+                                .HasMaxLength(2000)
+                                .HasColumnType("nvarchar(2000)")
+                                .HasColumnName("Description");
+
+                            b1.HasKey("BookId");
+
+                            b1.ToTable("Books");
+
+                            b1.WithOwner()
+                                .HasForeignKey("BookId");
+                        });
+
                     b.Navigation("Author");
 
                     b.Navigation("Category");
+
+                    b.Navigation("Description");
 
                     b.Navigation("PublishingHouse");
                 });
@@ -471,7 +508,29 @@ namespace MyBookAPI.Persistance.Migrations
                                 });
                         });
 
+                    b.OwnsOne("MyBookAPI.Domain.Entities.Description", "Description", b1 =>
+                        {
+                            b1.Property<int>("PublishingHouseId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("Text")
+                                .HasMaxLength(2000)
+                                .HasColumnType("nvarchar(2000)")
+                                .HasColumnName("Description");
+
+                            b1.HasKey("PublishingHouseId");
+
+                            b1.ToTable("PublishingHouses");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PublishingHouseId");
+                        });
+
                     b.Navigation("Address");
+
+                    b.Navigation("Description");
                 });
 
             modelBuilder.Entity("MyBookAPI.Domain.Entities.Review", b =>
@@ -530,6 +589,26 @@ namespace MyBookAPI.Persistance.Migrations
                                 .HasForeignKey("UserId");
                         });
 
+                    b.OwnsOne("MyBookAPI.Domain.Entities.Description", "Description", b1 =>
+                        {
+                            b1.Property<int>("UserId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("Text")
+                                .HasMaxLength(2000)
+                                .HasColumnType("nvarchar(2000)")
+                                .HasColumnName("Description");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
                     b.OwnsOne("MyBookAPI.Domain.Entities.PersonName", "UserName", b1 =>
                         {
                             b1.Property<int>("UserId")
@@ -558,6 +637,8 @@ namespace MyBookAPI.Persistance.Migrations
                         });
 
                     b.Navigation("Address");
+
+                    b.Navigation("Description");
 
                     b.Navigation("UserName");
                 });

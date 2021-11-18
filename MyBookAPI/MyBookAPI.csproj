@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MyBookAPI.Infrastructure\MyBookAPI.Infrastructure.csproj" />
     <ProjectReference Include="..\MyBookAPI.Persistance\MyBookAPI.Persistance.csproj" />
   </ItemGroup>
 
