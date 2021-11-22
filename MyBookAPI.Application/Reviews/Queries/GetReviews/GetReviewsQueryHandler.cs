@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MyBookAPI.Application.Common.Interfaces;
 using System.Collections.Generic;
@@ -11,29 +12,20 @@ namespace MyBookAPI.Application.Reviews.Queries.GetReviews
     public class GetReviewsQueryHandler : IRequestHandler<GetReviewsQuery, ReviewsVm>
     {
         private readonly IMyBookDbContext _context;
-        public GetReviewsQueryHandler(IMyBookDbContext context)
+        private readonly IMapper _mapper;
+        public GetReviewsQueryHandler(IMyBookDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         public async Task<ReviewsVm> Handle(GetReviewsQuery request, CancellationToken cancellationToken)
         {
             var reviews = await _context.Reviews.Where(x => x.Book.Name == request.BookName).ToListAsync();
-
-            var reviewsDtoList = new List<ReviewDto>();
-
-            reviews.ForEach(c =>
-            {
-                reviewsDtoList.Add(new ReviewDto
-                {
-                    UserName = c.User.UserName.ToString(),
-                    Stars = c.Stars,
-                    Text = c.Text
-                });
-            });
+            var reviewsDto = _mapper.Map<List<ReviewDto>>(reviews);
 
             return new ReviewsVm
             {
-                BookReviews = reviewsDtoList
+                BookReviews = reviewsDto
             };
         }
     }

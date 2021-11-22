@@ -8,6 +8,7 @@ using MyBookAPI.Persistance;
 using MyBookAPI.Infrastructure;
 using System;
 using System.IO;
+using MyBookAPI.Application;
 
 namespace MyBookAPI
 {
@@ -23,6 +24,7 @@ namespace MyBookAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplication();
             services.AddPersistance(Configuration);
             services.AddInfrastructure(Configuration);
 
