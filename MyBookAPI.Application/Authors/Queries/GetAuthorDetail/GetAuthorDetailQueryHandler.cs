@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MyBookAPI.Application.Common.Interfaces;
 using System;
@@ -11,19 +12,19 @@ namespace MyBookAPI.Application.Common.Authors.Queries.GetAuthorDetail
     public class GetAuthorDetailQueryHandler : IRequestHandler<GetAuthorDetailQuery, AuthorDetailVm>
     {
         private readonly IMyBookDbContext _context;
-        public GetAuthorDetailQueryHandler(IMyBookDbContext context)
+        private readonly IMapper _mapper;
+        public GetAuthorDetailQueryHandler(IMyBookDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         public async Task<AuthorDetailVm> Handle(GetAuthorDetailQuery request, CancellationToken cancellationToken)
         {
             var author = await _context.Authors.Where(x => x.AuthorName.ToString().Equals(request.FullName)).FirstOrDefaultAsync(cancellationToken);
-            
-            return new AuthorDetailVm
-            {
-                Description = author.Description.Text,
-                Books = author.Books.ToList()
-            };
+
+            var authorVm = _mapper.Map<AuthorDetailVm>(author);
+
+            return authorVm;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MyBookAPI.Application.Books.Models;
 using MyBookAPI.Application.Common.Interfaces;
@@ -12,34 +13,20 @@ namespace MyBookAPI.Application.Books.Queries.GetBooksByAuthor
     public class GetBooksByAuthorQueryHandler : IRequestHandler<GetBooksByAuthorQuery, BooksVm>
     {
         private readonly IMyBookDbContext _context;
-        public GetBooksByAuthorQueryHandler(IMyBookDbContext context)
+        private readonly IMapper _mapper;
+        public GetBooksByAuthorQueryHandler(IMyBookDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         public async Task<BooksVm> Handle(GetBooksByAuthorQuery request, CancellationToken cancellationToken)
         {
             var books = await _context.Books.Where(x => x.Author.AuthorName.ToString().Equals(request.AuthorName)).ToListAsync(cancellationToken);
-
-            var booksDtoList = new List<BookDto>();
-
-            books.ForEach(c =>
-            {
-                booksDtoList.Add(new BookDto
-                {
-                    Name = c.Name,
-                    Author = c.Author.AuthorName.ToString(),
-                    Category = c.Category.Name,
-                    Description = c.Description.Text,
-                    Pages = c.Pages,
-                    PublishingHouse = c.PublishingHouse.Name,
-                    Price = c.Price != 0 ? c.Price : null,
-                    ToBeSold = c.ToBeSold
-                });
-            });
+            var booksDto = _mapper.Map<List<BookDto>>(books);
 
             return new BooksVm
             {
-                Books = booksDtoList
+                Books = booksDto
             };
         }
     }
