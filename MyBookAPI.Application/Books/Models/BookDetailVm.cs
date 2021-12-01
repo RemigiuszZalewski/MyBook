@@ -3,7 +3,7 @@ using MyBookAPI.Application.Common.Mappings;
 using MyBookAPI.Domain.Entities;
 using System.Collections.Generic;
 
-namespace MyBookAPI.Application.Books.Queries.GetBookDetail
+namespace MyBookAPI.Application.Books.Models
 {
     public class BookDetailVm : IMapFrom<Book>
     {

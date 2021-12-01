@@ -21,13 +21,16 @@ namespace MyBookAPI.Application.Books.Queries.GetBooksByAuthor
         }
         public async Task<BooksVm> Handle(GetBooksByAuthorQuery request, CancellationToken cancellationToken)
         {
-            var books = await _context.Books.Where(x => x.Author.AuthorName.ToString().Equals(request.AuthorName)).ToListAsync(cancellationToken);
-            var booksDto = _mapper.Map<List<BookDto>>(books);
+            var books = await _context.Books.Where(x => x.Author.AuthorName.FirstName.Equals(request.FirstName) &&
+                                                        x.Author.AuthorName.LastName.Equals(request.LastName))
+                                            .Include(x => x.PublishingHouse)
+                                            .Include(x => x.Category)
+                                            .Include(x => x.Author)
+                                            .ToListAsync(cancellationToken);
 
-            return new BooksVm
-            {
-                Books = booksDto
-            };
+            var bookDetailVms = _mapper.Map<List<BookDetailVm>>(books);
+
+            return new BooksVm { Books = bookDetailVms };
         }
     }
 }

@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace MyBookAPI.Application.Reviews.Commands.CreateReview
 {
-    public class CreateBookReviewCommandHandler : IRequestHandler<CreateBookReviewCommand, int>
+    public class CreateReviewCommandHandler : IRequestHandler<CreateReviewCommand, int>
     {
         private readonly IMyBookDbContext _context;
-        public CreateBookReviewCommandHandler(IMyBookDbContext context)
+        public CreateReviewCommandHandler(IMyBookDbContext context)
         {
             _context = context;
         }
 
-        public async Task<int> Handle(CreateBookReviewCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateReviewCommand request, CancellationToken cancellationToken)
         {
             var book = await _context.Books.Where(x => x.Name.Equals(request.BookName)).FirstOrDefaultAsync(cancellationToken);
             var user = await _context.Users.Where(x => x.UserName.ToString().Equals(request.UserName)).FirstOrDefaultAsync(cancellationToken);

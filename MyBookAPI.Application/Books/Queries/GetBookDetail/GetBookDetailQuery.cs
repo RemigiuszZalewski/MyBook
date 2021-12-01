@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MyBookAPI.Application.Books.Models;
 
 namespace MyBookAPI.Application.Books.Queries.GetBookDetail
 {

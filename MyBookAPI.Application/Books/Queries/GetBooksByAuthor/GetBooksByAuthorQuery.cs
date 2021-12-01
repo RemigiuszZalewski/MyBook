@@ -5,6 +5,7 @@ namespace MyBookAPI.Application.Books.Queries.GetBooksByAuthor
 {
     public class GetBooksByAuthorQuery : IRequest<BooksVm>
     {
-        public string AuthorName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

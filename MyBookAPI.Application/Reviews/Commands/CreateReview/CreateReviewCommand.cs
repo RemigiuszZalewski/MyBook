@@ -2,7 +2,7 @@
 
 namespace MyBookAPI.Application.Reviews.Commands.CreateReview
 {
-    public class CreateBookReviewCommand : IRequest<int>
+    public class CreateReviewCommand : IRequest<int>
     {
         public string Text { get; set; }
         public int Stars { get; set; }
