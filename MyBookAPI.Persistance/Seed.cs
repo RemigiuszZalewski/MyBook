@@ -14,13 +14,19 @@ namespace MyBookAPI.Persistance
                 {
                     Id = 1,
                     StatusId = 1,
-                    Created = DateTime.Now
+                    Created = DateTime.Now,
+                    Country = "Poland"
                 });
                 r.OwnsOne(r => r.AuthorName).HasData(new
                 {
                     AuthorId = 1,
                     FirstName = "Adam",
                     LastName = "Mickiewicz"
+                });
+                r.OwnsOne(r => r.Description).HasData(new
+                {
+                    AuthorId = 1,
+                    Text = "He studied at Vilnius University and went on to teach at the provincial school in Kaunas. He was among the founders of the secret patriotic Towarzystwo Filomatow / Philomaths' Society"
                 });
             });
 
@@ -31,7 +37,7 @@ namespace MyBookAPI.Persistance
                     Id = 1,
                     StatusId = 1,
                     Created = DateTime.Now,
-                    Name = "BestPublishingHouse"
+                    Name = "BestPublishingHouse",
                 });
                 r.OwnsOne(r => r.Address).HasData(new
                 {
@@ -40,6 +46,11 @@ namespace MyBookAPI.Persistance
                     City = "Warsaw",
                     Street = "Kolorowa 3/2",
                     ZipCode = "00-014"
+                });
+                r.OwnsOne(r => r.Description).HasData(new
+                {
+                   PublishingHouseId = 1,
+                   Text = "The best in the world"
                 });
             });
 
@@ -63,9 +74,12 @@ namespace MyBookAPI.Persistance
 
             modelBuilder.Entity<Book>(r =>
             {
-                r.HasData(new Book { AuthorId = 1, PublishingHouseId = 1, Id = 1, CategoryId = 5, Name = "Pan Tadeusz" },
-                          new Book { AuthorId = 1, PublishingHouseId = 1, Id = 2, CategoryId = 8, Name = "Dziady II" },
-                          new Book { AuthorId = 1, PublishingHouseId = 1, Id = 3, CategoryId = 8, Name = "Konrad Wallenrod" });
+                r.HasData(new Book { AuthorId = 1, PublishingHouseId = 1, Id = 1, CategoryId = 5, Name = "Pan Tadeusz", ToBeSold = false });
+                r.OwnsOne(r => r.Description).HasData(new { BookId = 1, Text = "Pan Tadeusz is an epic poem by the Polish poet, writer, translator and philosopher Adam Mickiewicz." });
+                r.HasData(new Book { AuthorId = 1, PublishingHouseId = 1, Id = 2, CategoryId = 8, Name = "Dziady II", ToBeSold = false });
+                r.OwnsOne(r => r.Description).HasData(new { BookId = 2, Text = "The drama's title refers to Dziady, an ancient Slavic feast commemorating the dead." });
+                r.HasData(new Book { AuthorId = 1, PublishingHouseId = 1, Id = 3, CategoryId = 5, Name = "Konrad Wallenrod", ToBeSold = false });
+                r.OwnsOne(r => r.Description).HasData(new { BookId = 3, Text = "Konrad Wallenrod is an 1828 narrative poem, in Polish, by Adam Mickiewicz, set in the 14th-century Grand Duchy of Lithuania." });
             });
         }
     }

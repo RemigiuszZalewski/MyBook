@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyBookAPI.Persistance.Migrations
 {
-    public partial class initial : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,6 +15,8 @@ namespace MyBookAPI.Persistance.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -52,6 +54,7 @@ namespace MyBookAPI.Persistance.Migrations
                     City = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
                     Street = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     ZipCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -77,7 +80,8 @@ namespace MyBookAPI.Persistance.Migrations
                     Country = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
                     City = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
                     Street = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    ZipCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true)
+                    ZipCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -91,13 +95,14 @@ namespace MyBookAPI.Persistance.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(2,2)", precision: 2, scale: 2, nullable: false),
-                    ToBeSold = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    Price = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: true),
+                    ToBeSold = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     Pages = table.Column<int>(type: "int", maxLength: 2000, nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: true),
-                    ReleaseYear = table.Column<int>(type: "int", nullable: false, defaultValue: 2000),
+                    PublicationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PublishingHouseId = table.Column<int>(type: "int", nullable: true),
                     AuthorId = table.Column<int>(type: "int", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -159,8 +164,8 @@ namespace MyBookAPI.Persistance.Migrations
 
             migrationBuilder.InsertData(
                 table: "Authors",
-                columns: new[] { "Id", "Created", "CreatedBy", "Inactivated", "InactivatedBy", "Modified", "ModifiedBy", "StatusId", "FirstName", "LastName" },
-                values: new object[] { 1, new DateTime(2021, 11, 7, 19, 45, 51, 598, DateTimeKind.Local).AddTicks(2968), null, null, null, null, null, 1, "Adam", "Mickiewicz" });
+                columns: new[] { "Id", "Country", "Created", "CreatedBy", "Inactivated", "InactivatedBy", "Modified", "ModifiedBy", "StatusId", "Description", "FirstName", "LastName" },
+                values: new object[] { 1, "Poland", new DateTime(2021, 11, 27, 18, 24, 21, 323, DateTimeKind.Local).AddTicks(8537), null, null, null, null, null, 1, "He studied at Vilnius University and went on to teach at the provincial school in Kaunas. He was among the founders of the secret patriotic Towarzystwo Filomatow / Philomaths' Society", "Adam", "Mickiewicz" });
 
             migrationBuilder.InsertData(
                 table: "Categories",
@@ -185,23 +190,23 @@ namespace MyBookAPI.Persistance.Migrations
 
             migrationBuilder.InsertData(
                 table: "PublishingHouses",
-                columns: new[] { "Id", "Created", "CreatedBy", "Inactivated", "InactivatedBy", "Modified", "ModifiedBy", "Name", "StatusId", "City", "Country", "Street", "ZipCode" },
-                values: new object[] { 1, new DateTime(2021, 11, 7, 19, 45, 51, 614, DateTimeKind.Local).AddTicks(2909), null, null, null, null, null, "BestPublishingHouse", 1, "Warsaw", "Poland", "Kolorowa 3/2", "00-014" });
+                columns: new[] { "Id", "Created", "CreatedBy", "Inactivated", "InactivatedBy", "Modified", "ModifiedBy", "Name", "StatusId", "City", "Country", "Street", "ZipCode", "Description" },
+                values: new object[] { 1, new DateTime(2021, 11, 27, 18, 24, 21, 337, DateTimeKind.Local).AddTicks(2394), null, null, null, null, null, "BestPublishingHouse", 1, "Warsaw", "Poland", "Kolorowa 3/2", "00-014", "The best in the world" });
 
             migrationBuilder.InsertData(
                 table: "Books",
-                columns: new[] { "Id", "AuthorId", "CategoryId", "Created", "CreatedBy", "Inactivated", "InactivatedBy", "Modified", "ModifiedBy", "Name", "Pages", "Price", "PublishingHouseId", "StatusId" },
-                values: new object[] { 1, 1, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, null, "Pan Tadeusz", 0, 0m, 1, 0 });
+                columns: new[] { "Id", "AuthorId", "CategoryId", "Created", "CreatedBy", "Inactivated", "InactivatedBy", "Modified", "ModifiedBy", "Name", "Pages", "Price", "PublicationDate", "PublishingHouseId", "StatusId", "ToBeSold", "Description" },
+                values: new object[] { 1, 1, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, null, "Pan Tadeusz", 0, null, null, 1, 0, false, "Pan Tadeusz is an epic poem by the Polish poet, writer, translator and philosopher Adam Mickiewicz." });
 
             migrationBuilder.InsertData(
                 table: "Books",
-                columns: new[] { "Id", "AuthorId", "CategoryId", "Created", "CreatedBy", "Inactivated", "InactivatedBy", "Modified", "ModifiedBy", "Name", "Pages", "Price", "PublishingHouseId", "StatusId" },
-                values: new object[] { 2, 1, 8, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, null, "Dziady II", 0, 0m, 1, 0 });
+                columns: new[] { "Id", "AuthorId", "CategoryId", "Created", "CreatedBy", "Inactivated", "InactivatedBy", "Modified", "ModifiedBy", "Name", "Pages", "Price", "PublicationDate", "PublishingHouseId", "StatusId", "ToBeSold", "Description" },
+                values: new object[] { 2, 1, 8, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, null, "Dziady II", 0, null, null, 1, 0, false, "The drama's title refers to Dziady, an ancient Slavic feast commemorating the dead." });
 
             migrationBuilder.InsertData(
                 table: "Books",
-                columns: new[] { "Id", "AuthorId", "CategoryId", "Created", "CreatedBy", "Inactivated", "InactivatedBy", "Modified", "ModifiedBy", "Name", "Pages", "Price", "PublishingHouseId", "StatusId" },
-                values: new object[] { 3, 1, 8, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, null, "Konrad Wallenrod", 0, 0m, 1, 0 });
+                columns: new[] { "Id", "AuthorId", "CategoryId", "Created", "CreatedBy", "Inactivated", "InactivatedBy", "Modified", "ModifiedBy", "Name", "Pages", "Price", "PublicationDate", "PublishingHouseId", "StatusId", "ToBeSold", "Description" },
+                values: new object[] { 3, 1, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, null, "Konrad Wallenrod", 0, null, null, 1, 0, false, "Konrad Wallenrod is an 1828 narrative poem, in Polish, by Adam Mickiewicz, set in the 14th-century Grand Duchy of Lithuania." });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Books_AuthorId",

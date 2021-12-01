@@ -58,7 +58,8 @@ namespace MyBookAPI.Persistance.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2021, 11, 18, 14, 39, 48, 333, DateTimeKind.Local).AddTicks(5111),
+                            Country = "Poland",
+                            Created = new DateTime(2021, 11, 27, 18, 24, 21, 323, DateTimeKind.Local).AddTicks(8537),
                             StatusId = 1
                         });
                 });
@@ -104,8 +105,8 @@ namespace MyBookAPI.Persistance.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal?>("Price")
-                        .HasPrecision(2, 2)
-                        .HasColumnType("decimal(2,2)");
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<DateTime?>("PublicationDate")
                         .HasColumnType("datetime2");
@@ -117,7 +118,8 @@ namespace MyBookAPI.Persistance.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("ToBeSold")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -158,7 +160,7 @@ namespace MyBookAPI.Persistance.Migrations
                         {
                             Id = 3,
                             AuthorId = 1,
-                            CategoryId = 8,
+                            CategoryId = 5,
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Konrad Wallenrod",
                             Pages = 0,
@@ -298,7 +300,7 @@ namespace MyBookAPI.Persistance.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2021, 11, 18, 14, 39, 48, 353, DateTimeKind.Local).AddTicks(4694),
+                            Created = new DateTime(2021, 11, 27, 18, 24, 21, 337, DateTimeKind.Local).AddTicks(2394),
                             Name = "BestPublishingHouse",
                             StatusId = 1
                         });
@@ -372,6 +374,13 @@ namespace MyBookAPI.Persistance.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("AuthorId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    AuthorId = 1,
+                                    Text = "He studied at Vilnius University and went on to teach at the provincial school in Kaunas. He was among the founders of the secret patriotic Towarzystwo Filomatow / Philomaths' Society"
+                                });
                         });
 
                     b.OwnsOne("MyBookAPI.Domain.Entities.PersonName", "AuthorName", b1 =>
@@ -446,6 +455,23 @@ namespace MyBookAPI.Persistance.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("BookId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    BookId = 1,
+                                    Text = "Pan Tadeusz is an epic poem by the Polish poet, writer, translator and philosopher Adam Mickiewicz."
+                                },
+                                new
+                                {
+                                    BookId = 2,
+                                    Text = "The drama's title refers to Dziady, an ancient Slavic feast commemorating the dead."
+                                },
+                                new
+                                {
+                                    BookId = 3,
+                                    Text = "Konrad Wallenrod is an 1828 narrative poem, in Polish, by Adam Mickiewicz, set in the 14th-century Grand Duchy of Lithuania."
+                                });
                         });
 
                     b.Navigation("Author");
@@ -526,6 +552,13 @@ namespace MyBookAPI.Persistance.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("PublishingHouseId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    PublishingHouseId = 1,
+                                    Text = "The best in the world"
+                                });
                         });
 
                     b.Navigation("Address");

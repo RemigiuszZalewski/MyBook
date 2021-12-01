@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using MyBookAPI.Application.Books.Models;
 using MyBookAPI.Application.Common.Interfaces;
 using System.Linq;
 using System.Threading;
@@ -19,7 +20,12 @@ namespace MyBookAPI.Application.Books.Queries.GetBookDetail
         }
         public async Task<BookDetailVm> Handle(GetBookDetailQuery request, CancellationToken cancellationToken)
         {
-            var book = await _context.Books.Where(x => x.Name.Equals(request.BookName)).FirstOrDefaultAsync(cancellationToken);
+            var book = await _context.Books.Where(x => x.Name.Equals(request.BookName))
+                                           .Include(x => x.PublishingHouse)
+                                           .Include(x => x.Category)
+                                           .Include(x => x.Author)
+                                           .FirstOrDefaultAsync(cancellationToken);
+
             var bookVm = _mapper.Map<BookDetailVm>(book);
 
             return bookVm;

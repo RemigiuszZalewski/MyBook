@@ -17,16 +17,19 @@ namespace MyBookAPI.Application.Books.Queries.GetBooksByCountry
         public GetBooksByCountryQueryHandler(IMyBookDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         public async Task<BooksVm> Handle(GetBooksByCountryQuery request, CancellationToken cancellationToken)
         {
-            var books = await _context.Books.Where(x => x.Author.Country.Equals(request.Country)).ToListAsync(cancellationToken);
-            var booksDto = _mapper.Map<List<BookDto>>(books);
+            var books = await _context.Books.Where(x => x.Author.Country.Equals(request.Country))
+                                            .Include(x => x.PublishingHouse)
+                                            .Include(x => x.Category)
+                                            .Include(x => x.Author)
+                                            .ToListAsync(cancellationToken);
 
-            return new BooksVm
-            {
-                Books = booksDto
-            };
+            var bookDetailVms = _mapper.Map<List<BookDetailVm>>(books);
+
+            return new BooksVm { Books = bookDetailVms };
         }
     }
 }

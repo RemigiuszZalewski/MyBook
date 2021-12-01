@@ -4,6 +4,7 @@ namespace MyBookAPI.Application.Common.Authors.Queries.GetAuthorDetail
 {
     public class GetAuthorDetailQuery : IRequest<AuthorDetailVm>
     {
-        public string FullName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

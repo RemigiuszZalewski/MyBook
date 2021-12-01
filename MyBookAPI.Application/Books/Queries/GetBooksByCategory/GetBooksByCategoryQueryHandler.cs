@@ -21,13 +21,15 @@ namespace MyBookAPI.Application.Books.Queries.GetBooksByCategory
         }
         public async Task<BooksVm> Handle(GetBooksByCategoryQuery request, CancellationToken cancellationToken)
         {
-            var books = await _context.Books.Where(x => x.Category.Equals(request.Category)).ToListAsync(cancellationToken);
-            var booksDto = _mapper.Map<List<BookDto>>(books);
+            var books = await _context.Books.Where(x => x.Category.Name.Equals(request.Category))
+                                            .Include(x => x.Author)
+                                            .Include(x => x.Category)
+                                            .Include(x => x.PublishingHouse)
+                                            .ToListAsync(cancellationToken);
 
-            return new BooksVm
-            {
-                Books = booksDto
-            };
+            var bookDetailVms = _mapper.Map<List<BookDetailVm>>(books);
+
+            return new BooksVm { Books = bookDetailVms };
         }
     }
 }

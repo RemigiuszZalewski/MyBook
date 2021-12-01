@@ -16,7 +16,8 @@ namespace MyBookAPI.Application.Authors.Commands.DeleteAuthor
         }
         public async Task<Unit> Handle(DeleteAuthorCommand request, CancellationToken cancellationToken)
         {
-            var author = await _context.Authors.Where(x => x.AuthorName.ToString().Equals(request.FullName)).FirstOrDefaultAsync(cancellationToken);
+            var author = await _context.Authors.Where(x => x.AuthorName.FirstName.Equals(request.FirstName) &&
+                                                           x.AuthorName.LastName.Equals(request.LastName)).FirstOrDefaultAsync(cancellationToken);
 
             _context.Authors.Remove(author);
             await _context.SaveChangesAsync(cancellationToken);

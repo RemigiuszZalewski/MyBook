@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using MyBookAPI.Application.Books.Queries.GetBookDetail;
+using System.Collections.Generic;
 
 namespace MyBookAPI.Application.Books.Models
 {
     public class BooksVm
     {
-        public ICollection<BookDto> Books { get; set; }
+        public ICollection<BookDetailVm> Books { get; set; }
     }
 }
