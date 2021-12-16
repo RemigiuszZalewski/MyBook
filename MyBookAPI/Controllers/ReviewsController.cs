@@ -1,13 +1,8 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyBookAPI.Application.Reviews.Commands.CreateReview;
 using MyBookAPI.Application.Reviews.Commands.DeleteReview;
 using MyBookAPI.Application.Reviews.Commands.UpdateReview;
 using MyBookAPI.Application.Reviews.Queries.GetReviews;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyBookAPI.Controllers
@@ -16,33 +11,32 @@ namespace MyBookAPI.Controllers
     [ApiController]
     public class ReviewsController : BaseController
     {
-        [HttpGet]
-        public async Task<ActionResult<ReviewsVm>> GetReviews([FromQuery] string bookName)
+        [HttpGet("{bookName}")]
+        public async Task<ActionResult<ReviewsVm>> GetReviews(string bookName)
         {
             var vm = await Mediator.Send(new GetReviewsQuery { BookName = bookName });
             return vm;
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> CreateReview([FromQuery] string bookName, [FromQuery] int stars, 
-                                                          [FromQuery] string text, [FromQuery] string userName)
+        public async Task<ActionResult<int>> CreateReview(CreateReviewCommand command)
         {
-            var vm = await Mediator.Send(new CreateReviewCommand { BookName = bookName, Stars = stars, Text = text, UserName = userName });
-            return vm;
+            var result = await Mediator.Send(command);
+            return Ok(result);
         }
 
         [HttpDelete]
-        public async Task<Unit> DeleteReview([FromQuery] int reviewId)
+        public async Task<IActionResult> DeleteReview(DeleteReviewCommand command)
         {
-            var vm = await Mediator.Send(new DeleteReviewCommand { ReviewId = reviewId });
-            return vm;
+            var result = await Mediator.Send(command);
+            return Ok(result);
         }
 
         [HttpPatch]
-        public async Task<Unit> UpdateReview([FromQuery] int reviewId, [FromQuery] int stars, [FromQuery] string text)
+        public async Task<IActionResult> UpdateReview(UpdateReviewCommand command)
         {
-            var vm = await Mediator.Send(new UpdateReviewCommand { ReviewId = reviewId, Stars = stars, Text = text });
-            return vm;
+            var result = await Mediator.Send(command);
+            return Ok(result);
         }
     }
 }

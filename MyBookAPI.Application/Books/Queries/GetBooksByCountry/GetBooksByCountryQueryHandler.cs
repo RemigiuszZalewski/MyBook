@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MyBookAPI.Application.Books.Models;
+using MyBookAPI.Application.Common.Exceptions;
 using MyBookAPI.Application.Common.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,9 @@ namespace MyBookAPI.Application.Books.Queries.GetBooksByCountry
                                             .Include(x => x.Category)
                                             .Include(x => x.Author)
                                             .ToListAsync(cancellationToken);
+
+            if (books is null || books.Count == 0)
+                throw new NotFoundException($"No books created by authors from country {request.Country} have been found.");
 
             var bookDetailVms = _mapper.Map<List<BookDetailVm>>(books);
 
