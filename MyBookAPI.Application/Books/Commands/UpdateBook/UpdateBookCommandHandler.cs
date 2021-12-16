@@ -26,7 +26,6 @@ namespace MyBookAPI.Application.Books.Commands.UpdateBook
             var category = await _context.Categories.Where(x => x.Name.Equals(request.Category)).FirstOrDefaultAsync(cancellationToken);
 
             book.Price = (request.Price ?? 0) > 0 ? request.Price : null;
-
             book.Description = request.Description != null ? new Description { Text = request.Description } : book.Description;
             book.ToBeSold = request.Price != null ? true : false;
             book.CategoryId = category != null ? category.Id : book.CategoryId;

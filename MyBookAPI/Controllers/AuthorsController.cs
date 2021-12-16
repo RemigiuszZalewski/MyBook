@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyBookAPI.Application.Authors.Commands.DeleteAuthor;
 using MyBookAPI.Application.Authors.Commands.UpdateAuthor;
 using MyBookAPI.Application.Common.Authors.Commands.CreateAuthor;
@@ -20,26 +19,24 @@ namespace MyBookAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> CreateAuthor([FromQuery] string firstName, [FromQuery] string lastName,
-                                                          [FromQuery] string description, [FromQuery] string country)
+        public async Task<IActionResult> CreateAuthor(CreateAuthorCommand command)
         {
-            var result = await Mediator.Send(new CreateAuthorCommand { FirstName = firstName, LastName = lastName, Description = description, Country = country });
-            return result;
+            var result = await Mediator.Send(command);
+            return Ok(result);
         }
 
         [HttpPatch]
-        public async Task<Unit> UpdateAuthor([FromQuery] string firstName, [FromQuery] string lastName,
-                                                          [FromQuery] string description, [FromQuery] string country)
+        public async Task<IActionResult> UpdateAuthor(UpdateAuthorCommand command)
         {
-            var result = await Mediator.Send(new UpdateAuthorCommand { FirstName = firstName, LastName = lastName, Description = description, Country = country });
-            return result;
+            var result = await Mediator.Send(command);
+            return Ok(result);
         }
 
         [HttpDelete]
-        public async Task<Unit> DeleteAuthor([FromQuery] string firstName, [FromQuery] string lastName)
+        public async Task<IActionResult> DeleteAuthor(DeleteAuthorCommand command)
         { 
-            var result = await Mediator.Send(new DeleteAuthorCommand { FirstName = firstName, LastName = lastName });
-            return result;
+            var result = await Mediator.Send(command);
+            return Ok(result);
         }
     }
 }

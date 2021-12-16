@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MyBookAPI.Application.Books.Models;
+using MyBookAPI.Application.Common.Exceptions;
 using MyBookAPI.Application.Common.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,9 @@ namespace MyBookAPI.Application.Books.Queries.GetBooksByCategory
                                             .Include(x => x.Category)
                                             .Include(x => x.PublishingHouse)
                                             .ToListAsync(cancellationToken);
+
+            if (books is null || books.Count == 0)
+                throw new NotFoundException($"No books from category {request.Category} have been found.");
 
             var bookDetailVms = _mapper.Map<List<BookDetailVm>>(books);
 

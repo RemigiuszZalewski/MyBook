@@ -46,50 +46,24 @@ namespace MyBookAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> CreateBook([FromQuery] string name, [FromQuery] string category, [FromQuery] int pages, [FromQuery] decimal? price, [FromQuery] string description,
-                                                        [FromQuery] DateTime? publicationDate, [FromQuery] string publishingHouse, [FromQuery] string authorFirstName, [FromQuery] string authorLastName)
+        public async Task<IActionResult> CreateBook(CreateBookCommand command)
         {
-            var vm = await Mediator.Send(new CreateBookCommand
-            {
-                Name = name,
-                Category = category,
-                Pages = pages,
-                Price = price,
-                Description = description,
-                PublicationDate = publicationDate,
-                PublishingHouse = publishingHouse,
-                AuthorFirstName = authorFirstName,
-                AuthorLastName = authorLastName
-            });
-
-            return vm;
+            var result = Mediator.Send(command);
+            return Ok(result);
         }
 
         [HttpPatch]
-        public async Task<Unit> UpdateBook([FromQuery] string name, [FromQuery] string category, [FromQuery] int pages, [FromQuery] decimal? price, [FromQuery] string description,
-                                           [FromQuery] DateTime? publicationDate, [FromQuery] string publishingHouse, [FromQuery] string authorFirstName, [FromQuery] string authorLastName)
+        public async Task<IActionResult> UpdateBook(UpdateBookCommand command)
         {
-            var vm = await Mediator.Send(new UpdateBookCommand
-            {
-                Name = name,
-                Category = category,
-                Pages = pages,
-                Price = price,
-                Description = description,
-                PublicationDate = publicationDate,
-                PublishingHouse = publishingHouse,
-                AuthorFirstName = authorFirstName,
-                AuthorLastName = authorLastName
-            });
-
-            return vm;
+            var result = await Mediator.Send(command);
+            return Ok(result);
         }
 
         [HttpDelete]
-        public async Task<Unit> DeleteBook([FromQuery] string bookName)
+        public async Task<IActionResult> DeleteBook(DeleteBookCommand command)
         {
-            var vm = await Mediator.Send(new DeleteBookCommand { BookName = bookName });
-            return vm;
+            var result = await Mediator.Send(command);
+            return Ok(result);
         }
     }
 }
