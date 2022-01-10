@@ -12,14 +12,15 @@ namespace MyBookAPI.Persistance
     public class MyBookDbContext : DbContext, IMyBookDbContext
     {
         private readonly IDateTime _dateTime;
-
+        private readonly ICurrentUserService _userService;
         public MyBookDbContext(DbContextOptions<MyBookDbContext> options) : base(options)
         {
 
         }
-        public MyBookDbContext(DbContextOptions<MyBookDbContext> options, IDateTime dateTime): base(options)
+        public MyBookDbContext(DbContextOptions<MyBookDbContext> options, IDateTime dateTime, ICurrentUserService userService): base(options)
         {
             _dateTime = dateTime;
+            _userService = userService;
         }
 
         public DbSet<Book> Books { get; set; }
@@ -42,21 +43,21 @@ namespace MyBookAPI.Persistance
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedBy = string.Empty;
+                        entry.Entity.CreatedBy = _userService.Email;
                         entry.Entity.Created = _dateTime.Now;
                         entry.Entity.StatusId = 1;
                         break;
 
                     case EntityState.Modified:
-                        entry.Entity.ModifiedBy = string.Empty;
+                        entry.Entity.ModifiedBy = _userService.Email;
                         entry.Entity.Modified = _dateTime.Now;
                         break;
 
                     case EntityState.Deleted:
-                        entry.Entity.ModifiedBy = string.Empty;
+                        entry.Entity.ModifiedBy = _userService.Email;
                         entry.Entity.Modified = _dateTime.Now;
                         entry.Entity.Inactivated = _dateTime.Now;
-                        entry.Entity.InactivatedBy = string.Empty;
+                        entry.Entity.InactivatedBy = _userService.Email;
                         entry.Entity.StatusId = 0;
                         entry.State = EntityState.Modified;
                         break;

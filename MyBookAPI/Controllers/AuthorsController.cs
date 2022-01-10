@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyBookAPI.Application.Authors.Commands.DeleteAuthor;
 using MyBookAPI.Application.Authors.Commands.UpdateAuthor;
 using MyBookAPI.Application.Common.Authors.Commands.CreateAuthor;
