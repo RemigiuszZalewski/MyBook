@@ -7,8 +7,8 @@ namespace MyBookAPI.Application.Authors.Queries.GetAuthorDetail
     {
         public GetAuthorDetailQueryValidator()
         {
-            RuleFor(x => x.FirstName).NotNull();
-            RuleFor(x => x.LastName).NotNull();
+            RuleFor(x => x.FirstName).NotEmpty();
+            RuleFor(x => x.LastName).NotEmpty();
         }
     }
 }

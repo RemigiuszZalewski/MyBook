@@ -1,5 +1,4 @@
-﻿using MyBookAPI.Domain.Common;
-using System;
+﻿using System;
 
 namespace MyBookAPI.Domain.Entities
 {

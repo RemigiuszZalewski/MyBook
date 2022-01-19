@@ -28,8 +28,8 @@ namespace MyBookAPI.Application.Books.Queries.GetBooksByCountry
                                             .Include(x => x.Author)
                                             .ToListAsync(cancellationToken);
 
-            if (books is null || books.Count == 0)
-                throw new NotFoundException($"No books created by authors from country {request.Country} have been found.");
+            if (books.Count == 0)
+                return new BooksVm { Books = new List<BookDetailVm>() };
 
             var bookDetailVms = _mapper.Map<List<BookDetailVm>>(books);
 
