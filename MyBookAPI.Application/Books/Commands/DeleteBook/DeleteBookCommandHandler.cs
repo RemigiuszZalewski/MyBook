@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyBookAPI.Application.Common.Exceptions;
 using MyBookAPI.Application.Common.Interfaces;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace MyBookAPI.Application.Books.Commands.DeleteBook
         {
             _context = context;
         }
+
         public async Task<Unit> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
         {
             var book = await _context.Books.Where(x => x.Name.Equals(request.BookName)).FirstOrDefaultAsync(cancellationToken);

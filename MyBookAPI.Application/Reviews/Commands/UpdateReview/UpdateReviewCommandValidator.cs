@@ -6,7 +6,7 @@ namespace MyBookAPI.Application.Reviews.Commands.UpdateReview
     {
         public UpdateReviewCommandValidator()
         {
-            RuleFor(x => x.ReviewId).NotNull();
+            RuleFor(x => x.ReviewId).NotEqual(0);
             RuleFor(x => x.Text).MaximumLength(4000);
             RuleFor(x => x.Stars).InclusiveBetween(1, 5);
         }

@@ -18,9 +18,11 @@ namespace MyBookAPI.Application.Authors.Commands.UpdateAuthor
         {
             var author = await _context.Authors.Where(x => x.AuthorName.FirstName.Equals(request.FirstName) &&
                                                            x.AuthorName.LastName.Equals(request.LastName)).FirstOrDefaultAsync(cancellationToken);
+            if (request.Country is not null)
+                author.Country = request.Country;
 
-            author.Country = request.Country;
-            author.Description.Text = request.Description;
+            if (request.Description is not null)
+                author.Description.Text = request.Description;
 
             await _context.SaveChangesAsync(cancellationToken);
 

@@ -28,6 +28,24 @@ namespace MyBookAPI.Persistance
                     AuthorId = 1,
                     Text = "He studied at Vilnius University and went on to teach at the provincial school in Kaunas. He was among the founders of the secret patriotic Towarzystwo Filomatow / Philomaths' Society"
                 });
+                r.HasData(new Author
+                {
+                    Id = 2,
+                    StatusId = 2,
+                    Created = DateTime.Now,
+                    Country = "Poland"
+                });
+                r.OwnsOne(r => r.AuthorName).HasData(new
+                {
+                    AuthorId = 2,
+                    FirstName = "Unknown",
+                    LastName = "Author"
+                });
+                r.OwnsOne(r => r.Description).HasData(new
+                {
+                    AuthorId = 2,
+                    Text = ""
+                });
             });
 
             modelBuilder.Entity<PublishingHouse>(r =>
@@ -52,6 +70,26 @@ namespace MyBookAPI.Persistance
                    PublishingHouseId = 1,
                    Text = "The best in the world"
                 });
+                r.HasData(new PublishingHouse
+                {
+                    Id = 2,
+                    StatusId = 1,
+                    Created = DateTime.Now,
+                    Name = "Unknown Publishing House",
+                });
+                r.OwnsOne(r => r.Address).HasData(new
+                {
+                    PublishingHouseId = 2,
+                    Country = "Unknown",
+                    City = "Unknown",
+                    Street = "Unknown",
+                    ZipCode = "00-234"
+                });
+                r.OwnsOne(r => r.Description).HasData(new
+                {
+                    PublishingHouseId = 2,
+                    Text = "Unknown Publishing House"
+                });
             });
 
             modelBuilder.Entity<Category>(r =>
@@ -69,7 +107,8 @@ namespace MyBookAPI.Persistance
                           new Category { Id = 11, Name = "Cookbook" },
                           new Category { Id = 12, Name = "Health and Diet" },
                           new Category { Id = 13, Name = "Classic" },
-                          new Category { Id = 14, Name = "Romance" });
+                          new Category { Id = 14, Name = "Romance" },
+                          new Category { Id = 15, Name = "Unknown" });
             });
 
             modelBuilder.Entity<Book>(r =>

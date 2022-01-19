@@ -6,10 +6,8 @@ namespace MyBookAPI.Application.Authors.Commands.UpdateAuthor
     {
         public UpdateAuthorCommandValidator()
         {
-            RuleFor(x => x.FirstName).NotNull();
-            RuleFor(x => x.LastName).NotNull();
-            RuleFor(x => x.Country).NotNull();
-            RuleFor(x => x.Description).NotNull();
+            RuleFor(x => x.FirstName).NotEmpty();
+            RuleFor(x => x.LastName).NotEmpty();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using MyBookAPI.Application.Common.Exceptions;
 using MyBookAPI.Application.Common.Interfaces;
 using System.Linq;
 using System.Threading;
@@ -18,8 +19,11 @@ namespace MyBookAPI.Application.Reviews.Commands.UpdateReview
         {
             var review = await _context.Reviews.Where(x => x.Id == request.ReviewId).FirstOrDefaultAsync(cancellationToken);
 
-            review.Stars = request.Stars;
-            review.Text = request.Text;
+            if (review is null)
+                throw new NotFoundException($"There's no review to be updated.");
+
+            review.Stars = request.Stars != null ? (int) request.Stars : review.Stars;
+            review.Text = request.Text != null ? request.Text : review.Text;
 
             await _context.SaveChangesAsync(cancellationToken);
 

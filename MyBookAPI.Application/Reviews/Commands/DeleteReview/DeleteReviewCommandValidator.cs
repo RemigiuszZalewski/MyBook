@@ -6,7 +6,7 @@ namespace MyBookAPI.Application.Reviews.Commands.DeleteReview
     {
         public DeleteReviewCommandValidator()
         {
-            RuleFor(x => x.ReviewId).NotNull();
+            RuleFor(x => x.ReviewId).NotEqual(0);
         }
     }
 }

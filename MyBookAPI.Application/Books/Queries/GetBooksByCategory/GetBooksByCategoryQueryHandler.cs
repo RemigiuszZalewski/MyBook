@@ -22,14 +22,19 @@ namespace MyBookAPI.Application.Books.Queries.GetBooksByCategory
         }
         public async Task<BooksVm> Handle(GetBooksByCategoryQuery request, CancellationToken cancellationToken)
         {
+            var category = await _context.Categories.Where(x => x.Name.Equals(request.Category))
+                                                    .FirstOrDefaultAsync(cancellationToken);
+            if (category == null)
+                throw new NotFoundException($"Category: {request.Category} does not exist.");
+
             var books = await _context.Books.Where(x => x.Category.Name.Equals(request.Category))
                                             .Include(x => x.Author)
                                             .Include(x => x.Category)
                                             .Include(x => x.PublishingHouse)
                                             .ToListAsync(cancellationToken);
 
-            if (books is null || books.Count == 0)
-                throw new NotFoundException($"No books from category {request.Category} have been found.");
+            if (books.Count == 0)
+                return new BooksVm { Books = new List<BookDetailVm>() };
 
             var bookDetailVms = _mapper.Map<List<BookDetailVm>>(books);
 
