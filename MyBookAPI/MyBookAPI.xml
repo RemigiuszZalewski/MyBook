@@ -4,10 +4,117 @@
         <name>MyBookAPI</name>
     </assembly>
     <members>
+        <member name="M:MyBookAPI.Controllers.AuthorsController.GetDetails(System.String,System.String)">
+            <summary>
+            Method that gets all details about an author passed into request.
+            </summary>
+            <param name="firstName"></param>
+            <param name="lastName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.AuthorsController.CreateAuthor(MyBookAPI.Application.Common.Authors.Commands.CreateAuthor.CreateAuthorCommand)">
+            <summary>
+            Method that creates a new author.
+            </summary>
+            <param name="command"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.AuthorsController.UpdateAuthor(MyBookAPI.Application.Authors.Commands.UpdateAuthor.UpdateAuthorCommand)">
+            <summary>
+            Method that updates selected information about an author.
+            </summary>
+            <param name="command"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.AuthorsController.DeleteAuthor(MyBookAPI.Application.Authors.Commands.DeleteAuthor.DeleteAuthorCommand)">
+            <summary>
+            Method that deletes an author.
+            </summary>
+            <param name="command"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.BooksController.GetDetails(System.String)">
+            <summary>
+            Method that retreives information about a book passed in the request.
+            </summary>
+            <param name="bookName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.BooksController.GetBooksByAuthor(System.String,System.String)">
+            <summary>
+            Method that returns a list of books that were written by specified author.
+            </summary>
+            <param name="firstName"></param>
+            <param name="lastName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.BooksController.GetBooksByCategory(System.String)">
+            <summary>
+            Method that returns a list of books from specified category.
+            </summary>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.BooksController.GetBooksByCountry(System.String)">
+            <summary>
+            Method that returns a list of books from specified country.
+            </summary>
+            <param name="country"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.BooksController.CreateBook(MyBookAPI.Application.Books.Commands.CreateBook.CreateBookCommand)">
+            <summary>
+            Method that creates a new book.
+            </summary>
+            <param name="command"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.BooksController.UpdateBook(MyBookAPI.Application.Books.Commands.UpdateBook.UpdateBookCommand)">
+            <summary>
+            Method that updates selected information about specified book.
+            </summary>
+            <param name="command"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.BooksController.DeleteBook(MyBookAPI.Application.Books.Commands.DeleteBook.DeleteBookCommand)">
+            <summary>
+            Method that deletes a book.
+            </summary>
+            <param name="command"></param>
+            <returns></returns>
+        </member>
         <member name="M:MyBookAPI.Controllers.HealthChecksController.GetAsync">
             <summary>
             Method that checks if the API is healthy or not.
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.ReviewsController.GetReviews(System.String)">
+            <summary>
+            Method that returns a list of reviews about specified book.
+            </summary>
+            <param name="bookName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.ReviewsController.CreateReview(MyBookAPI.Application.Reviews.Commands.CreateReview.CreateReviewCommand)">
+            <summary>
+            Method that creates a review about specified book.
+            </summary>
+            <param name="command"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.ReviewsController.DeleteReview(MyBookAPI.Application.Reviews.Commands.DeleteReview.DeleteReviewCommand)">
+            <summary>
+            Method that deletes specified review.
+            </summary>
+            <param name="command"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyBookAPI.Controllers.ReviewsController.UpdateReview(MyBookAPI.Application.Reviews.Commands.UpdateReview.UpdateReviewCommand)">
+            <summary>
+            Method that updates a review - stars, text or both if needed.
+            </summary>
+            <param name="command"></param>
             <returns></returns>
         </member>
     </members>
