@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
+using System.Reflection;
 
 namespace MyBookAPI
 {
@@ -17,7 +19,7 @@ namespace MyBookAPI
             try
             {
                 Log.Information("Application is starting.");
-                CreateHostBuilder(args).Build().Run();
+                CreateWebHostBuilder(args).UseSerilog().Build().Run();
             }
             catch (Exception ex) 
             {
@@ -29,12 +31,29 @@ namespace MyBookAPI
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseSerilog()
-                .ConfigureWebHostDefaults(webBuilder =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
                 {
-                    webBuilder.UseStartup<Startup>();
-                });
+                    var env = context.HostingEnvironment;
+
+                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                        .AddJsonFile($"appsettings.Local.json", optional: true, reloadOnChange: true);
+
+                    if (env.IsDevelopment())
+                    {
+                        var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
+                        config.AddUserSecrets(appAssembly, optional: true);
+                    }
+
+                    config.AddEnvironmentVariables();
+
+                    if (args != null)
+                    {
+                        config.AddCommandLine(args);
+                    }
+                })
+                .UseStartup<Startup>();
     }
 }

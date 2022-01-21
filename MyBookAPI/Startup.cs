@@ -15,17 +15,26 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using MyBookAPI.Services;
 using MyBookAPI.Application.Common.Interfaces;
 using System.Collections.Generic;
+using MyBookAPI.Infrastructure.IdentityServer;
+using Microsoft.EntityFrameworkCore;
+using IdentityServer4.Models;
+using IdentityServer4.Test;
+using System.Security.Claims;
+using IdentityModel;
+using Microsoft.AspNetCore.Authentication;
 
 namespace MyBookAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -39,14 +48,63 @@ namespace MyBookAPI
             });
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped(typeof(ICurrentUserService), typeof(CurrentUserService));
-            services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
+            
+            if (Environment.IsEnvironment("Test"))
             {
-                options.Authority = "https://localhost:5001";
-                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("MyBookAPIDatabase")));
+
+                services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+                services.AddIdentityServer()
+                        .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
+                        {
+                            options.ApiResources.Add(new ApiResource("mybook"));
+                            options.ApiScopes.Add(new ApiScope("mybook"));
+                            options.Clients.Add(new Client
+                            {
+                                ClientId = "client",
+                                AllowedGrantTypes = { GrantType.ResourceOwnerPassword },
+                                ClientSecrets = { new IdentityServer4.Models.Secret("secret".Sha256()) },
+                                AllowedScopes = { "openid", "profile", "MyBookAPIAPI", "mybook" }
+                            });
+                        }).AddTestUsers(new List<TestUser>
+                        {
+                                new TestUser
+                                {
+                                    SubjectId = "4B434A88-212D-4A4D-A17C-F35102D73CBB",
+                                    Username = "alice",
+                                    Password = "Pass123$",
+                                    Claims = new List<Claim>
+                                    {
+                                        new Claim(JwtClaimTypes.Email, "alice@user.com"),
+                                        new Claim(ClaimTypes.Name, "alice")
+                                    }
+                                }
+                        });
+
+                services.AddAuthentication("Bearer").AddIdentityServerJwt();
+            }
+            else
+            {
+                services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
                 {
-                    ValidateAudience = false,
-                };
-            });
+                    options.Authority = "https://localhost:5001";
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidateAudience = false,
+                    };
+                });
+
+                services.AddAuthorization(options =>
+                {
+                    options.AddPolicy("ApiScope", policy =>
+                    {
+                        policy.RequireAuthenticatedUser();
+                        policy.RequireClaim("scope", "mybook");
+                    });
+                });
+            }
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -88,15 +146,6 @@ namespace MyBookAPI
                 var filePath = Path.Combine(AppContext.BaseDirectory, "MyBookAPI.xml");
                 c.IncludeXmlComments(filePath);
             });
-
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("ApiScope", policy =>
-                {
-                    policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "mybook");
-                });
-            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -118,6 +167,12 @@ namespace MyBookAPI
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
+
+            if (Environment.IsEnvironment("Test"))
+            {
+                app.UseIdentityServer();
+            }
+
             app.UseSerilogRequestLogging();
             app.UseRouting();
             app.UseCors();
@@ -126,7 +181,7 @@ namespace MyBookAPI
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers().RequireAuthorization("ApiScope");
+                endpoints.MapControllers();
             });
         }
     }
